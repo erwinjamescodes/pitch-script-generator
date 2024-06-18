@@ -22,9 +22,9 @@ const UserInput = () => {
 	});
 	const [isUploading, setIsUploading] = useState(false);
 	const [isGenerating, setIsGenerating] = useState(false);
-	// const [generatedScript, setGeneratedScript] = useState(null);
 
 	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
+	const { isLoading } = loadingState;
 	console.log("LOADING STATE", loadingState);
 
 	const router = useRouter();
@@ -126,7 +126,7 @@ const UserInput = () => {
 	return (
 		<div
 			className={`w-full md:w-1/2 p-6 md:bg-[#F8F8F8] md:fixed h-[calc(100vh-70px)] ${
-				isHome ? "mt-[70px]" : ""
+				isHome ? "mt-8 md:mt-[70px]" : ""
 			}`}>
 			<form onSubmit={handleSubmitForm}>
 				<h2 className="text-primary font-semibold text-xl mb-4 hidden md:block">
@@ -253,14 +253,19 @@ const UserInput = () => {
 					</button>
 				</div>
 			</form>
-			{isGenerating && (
-				<div className="w-[50%] h-[calc(100vh-70px)] bg-red-400 fixed top-[70px] right-0 z-50 backdrop-filter backdrop-blur-lg flex items-center justify-center flex-col">
-					<p className="text-primary font-medium text-[22px] ">
-						Generating your pitch script...
-					</p>
-					<p className="text-primary font-medium text-[22px] ">
-						This may take a few seconds.
-					</p>
+			{isLoading && (
+				<div className="block md:hidden">
+					<div className="w-full h-screen bg-white fixed top-0 right-0 z-50 backdrop-filter backdrop-blur-lg flex items-center justify-center flex-col ">
+						<p className="absolute top-16 text-xl">Generating script</p>
+						<div>
+							<p className="text-primary font-medium text-[22px] ">
+								Generating your pitch script...
+							</p>
+							<p className="text-primary font-medium text-[22px] ">
+								This may take a few seconds.
+							</p>
+						</div>
+					</div>
 				</div>
 			)}
 		</div>
