@@ -77,6 +77,8 @@ export async function POST(request: NextRequest) {
 
 		const pitchText = ensureJsonFormatForPDF(pitchScript.choices[0].text);
 
+		console.log("PITCH TEXT", pitchText);
+
 		const removeTrailingWhitespace = (str: string): string => {
 			return str.replace(/\s+$/, "");
 		};
@@ -97,6 +99,8 @@ export async function POST(request: NextRequest) {
 		const formattedPitchScriptText = removeTrailingWhitespace(pitchScriptText);
 		const pitchScriptJson = JSON.parse(formattedPitchScriptText);
 		const csvData = convertJsonToCsv(pitchScriptJson);
+
+		console.log("PITCH SCRIPT JSON", pitchScriptJson);
 
 		// Create PDF document
 		const pdfDoc = await PDFDocument.create();

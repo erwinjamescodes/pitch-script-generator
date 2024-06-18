@@ -9,8 +9,7 @@ const s3 = new AWS.S3({
 
 export async function GET(request: NextRequest) {
 	try {
-		const url = new URL(request.url);
-		const key = url.searchParams.get("key");
+		const key = request.headers.get("X-Current-Key") || "";
 
 		if (!key) {
 			return NextResponse.json(

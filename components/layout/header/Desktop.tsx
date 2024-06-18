@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import Logo from "../../assets/fornax-logo.png";
-import ShareButton from "../buttons/Share";
-import CopyToClipboard from "../buttons/CopyToClipboard";
+import Logo from "../../../assets/fornax-logo.png";
+import ShareButton from "../../buttons/Share";
+import CopyToClipboard from "../../buttons/CopyToClipboard";
 
 const DesktopHeader = () => {
 	return (

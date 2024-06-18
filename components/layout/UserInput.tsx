@@ -1,8 +1,10 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
 import axios from "axios";
+import { usePathname, useRouter } from "next/navigation";
+import { LoadingProviderContext } from "../providers/LoadingProvider";
 
 type FormData = {
 	userPitch: string;
@@ -11,7 +13,7 @@ type FormData = {
 	additionalInstructions: string;
 };
 
-const UserInput = ({ onSubmit, isGenerating }: any) => {
+const UserInput = () => {
 	const [formData, setFormData] = useState<FormData>({
 		userPitch: "",
 		pitchDeck: null,
@@ -19,6 +21,35 @@ const UserInput = ({ onSubmit, isGenerating }: any) => {
 		additionalInstructions: "",
 	});
 	const [isUploading, setIsUploading] = useState(false);
+	const [isGenerating, setIsGenerating] = useState(false);
+	// const [generatedScript, setGeneratedScript] = useState(null);
+
+	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
+	console.log("LOADING STATE", loadingState);
+
+	const router = useRouter();
+	const pathname = usePathname();
+	const isHome = pathname === "/";
+
+	const handleSubmit = async (formData: FormData) => {
+		loadingDispatch({ type: "SET_START_LOADING" });
+		try {
+			const response = await axios.post("/api/generate-pitch", formData, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			const { scriptURL } = response.data;
+
+			// Redirect to a new URL with s3Url as a query parameter
+			router.push(`/scripts/${scriptURL}`);
+		} catch (error) {
+			console.error("Error submitting form:", error);
+		}
+
+		loadingDispatch({ type: "SET_FINISH_LOADING" });
+	};
 
 	const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
 		setIsUploading(true);
@@ -86,14 +117,17 @@ const UserInput = ({ onSubmit, isGenerating }: any) => {
 	const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await onSubmit(formData); // Call the onSubmit function passed from props
+			await handleSubmit(formData);
 		} catch (error) {
 			console.error("Error handling form submit:", error);
 		}
 	};
 
 	return (
-		<div className="w-full md:w-1/2 p-6 md:bg-[#F8F8F8] md:fixed h-[calc(100vh-70px)] mt-8 md:mt-[70px]">
+		<div
+			className={`w-full md:w-1/2 p-6 md:bg-[#F8F8F8] md:fixed h-[calc(100vh-70px)] ${
+				isHome ? "mt-[70px]" : ""
+			}`}>
 			<form onSubmit={handleSubmitForm}>
 				<h2 className="text-primary font-semibold text-xl mb-4 hidden md:block">
 					Preferences
@@ -219,6 +253,16 @@ const UserInput = ({ onSubmit, isGenerating }: any) => {
 					</button>
 				</div>
 			</form>
+			{isGenerating && (
+				<div className="w-[50%] h-[calc(100vh-70px)] bg-red-400 fixed top-[70px] right-0 z-50 backdrop-filter backdrop-blur-lg flex items-center justify-center flex-col">
+					<p className="text-primary font-medium text-[22px] ">
+						Generating your pitch script...
+					</p>
+					<p className="text-primary font-medium text-[22px] ">
+						This may take a few seconds.
+					</p>
+				</div>
+			)}
 		</div>
 	);
 };
