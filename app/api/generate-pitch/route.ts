@@ -2,7 +2,7 @@ import { fields } from "@/components/constants/fields";
 import { NextResponse, NextRequest } from "next/server";
 import { OpenAIApi, Configuration } from "openai-edge";
 import * as AWS from "aws-sdk";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+// import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { parse } from "json2csv";
 
 const configuration = new Configuration({
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 		});
 
 		const pitchScript = await response.json();
-		const pitchText = ensureJsonFormatForPDF(pitchScript.choices[0].text);
+		// const pitchText = ensureJsonFormatForPDF(pitchScript.choices[0].text);
 
 		// Generate CSV data
 		// Remove trailing whitespace from the pitch script text and parse it as JSON
@@ -71,35 +71,37 @@ export async function POST(request: NextRequest) {
 		const pitchScriptJson = JSON.parse(formattedPitchScriptText);
 		const csvData = convertJsonToCsv(pitchScriptJson);
 
+		// TEMPORARILY COMMENTING OUT FUNCTION TO SAVE SCRIPT AS PDF. FOR NOW, SAVING THE FILE TO A CSV IS MORE EFFICIENT FOR EASIER PARSING
+
 		// Create PDF document
-		const pdfDoc = await PDFDocument.create();
-		const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-		const page = pdfDoc.addPage();
-		const textWidth = 500;
-		const fontSize = 11;
-		page.drawText(pitchText, {
-			x: 50,
-			y: page.getHeight() - 50,
-			font: timesRomanFont,
-			size: fontSize,
-			maxWidth: textWidth,
-			color: rgb(0, 0, 0),
-		});
+		// const pdfDoc = await PDFDocument.create();
+		// const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+		// const page = pdfDoc.addPage();
+		// const textWidth = 500;
+		// const fontSize = 11;
+		// page.drawText(pitchText, {
+		// 	x: 50,
+		// 	y: page.getHeight() - 50,
+		// 	font: timesRomanFont,
+		// 	size: fontSize,
+		// 	maxWidth: textWidth,
+		// 	color: rgb(0, 0, 0),
+		// });
 
-		const pdfBytes = await pdfDoc.save();
+		// const pdfBytes = await pdfDoc.save();
+
+		// // Upload PDF to S3
+		// const uploadParams = {
+		// 	Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
+		// 	Key: `pitch-script-${currentDate}.pdf`,
+		// 	Body: pdfBytes,
+		// 	ContentType: "application/pdf",
+		// };
+
+		// const pdfDataResponse = await s3.upload(uploadParams).promise();
+		// console.log("PDF File uploaded successfully:", pdfDataResponse.Location);
+
 		const currentDate = Date.now();
-
-		// Upload PDF to S3
-		const uploadParams = {
-			Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
-			Key: `pitch-script-${currentDate}.pdf`,
-			Body: pdfBytes,
-			ContentType: "application/pdf",
-		};
-
-		const pdfDataResponse = await s3.upload(uploadParams).promise();
-		console.log("PDF File uploaded successfully:", pdfDataResponse.Location);
-
 		// Upload CSV to S3
 		const csvUploadParams = {
 			Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
@@ -123,17 +125,17 @@ export async function POST(request: NextRequest) {
 	}
 }
 
-const ensureJsonFormatForPDF = (str: string) => {
-	let cleanedStr = str.trim();
-	if (cleanedStr.startsWith("{")) {
-		cleanedStr = cleanedStr.replace(/^\{+/, "{");
-	}
-	if (cleanedStr.endsWith("}")) {
-		cleanedStr = cleanedStr.replace(/\}+$/, "}");
-	}
+// const ensureJsonFormatForPDF = (str: string) => {
+// 	let cleanedStr = str.trim();
+// 	if (cleanedStr.startsWith("{")) {
+// 		cleanedStr = cleanedStr.replace(/^\{+/, "{");
+// 	}
+// 	if (cleanedStr.endsWith("}")) {
+// 		cleanedStr = cleanedStr.replace(/\}+$/, "}");
+// 	}
 
-	return cleanedStr;
-};
+// 	return cleanedStr;
+// };
 
 const removeTrailingWhitespace = (str: string): string => {
 	return str.replace(/\s+$/, "");
