@@ -24,6 +24,7 @@ AWS.config.update({
 	region: process.env.NEXT_PUBLIC_REGION,
 });
 
+export const maxDuration = 30;
 export async function POST(request: NextRequest) {
 	const s3 = new AWS.S3();
 

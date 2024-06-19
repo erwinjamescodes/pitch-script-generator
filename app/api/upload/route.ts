@@ -7,6 +7,7 @@ const s3 = new AWS.S3({
 	region: process.env.NEXT_PUBLIC_REGION,
 });
 
+export const maxDuration = 30;
 export async function POST(request: NextRequest) {
 	try {
 		const { fileName, fileType } = await request.json();

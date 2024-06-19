@@ -6,10 +6,10 @@ export const Loader = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			if (progress < 1000) {
+			if (progress < 3000) {
 				setProgress((prevProgress) => prevProgress + 1);
 			}
-		}, 300);
+		}, 500);
 
 		return () => clearInterval(interval);
 	}, [progress]);
