@@ -77,8 +77,6 @@ export async function POST(request: NextRequest) {
 
 		const pitchText = ensureJsonFormatForPDF(pitchScript.choices[0].text);
 
-		console.log("PITCH TEXT", pitchText);
-
 		const removeTrailingWhitespace = (str: string): string => {
 			return str.replace(/\s+$/, "");
 		};
@@ -122,7 +120,7 @@ export async function POST(request: NextRequest) {
 
 		// Upload PDF to S3
 		const uploadParams = {
-			Bucket: "pitch-script-generator",
+			Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
 			Key: `pitch-script-${currentDate}.pdf`,
 			Body: pdfBytes,
 			ContentType: "application/pdf",
@@ -133,7 +131,7 @@ export async function POST(request: NextRequest) {
 
 		// Upload CSV to S3
 		const csvUploadParams = {
-			Bucket: "pitch-script-generator",
+			Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
 			Key: `pitch-script-${currentDate}.csv`,
 			Body: csvData,
 			ContentType: "text/csv",

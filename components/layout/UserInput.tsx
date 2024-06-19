@@ -2,6 +2,7 @@
 import React, { ChangeEvent, useContext, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { LoadingProviderContext } from "../providers/LoadingProvider";
@@ -21,11 +22,8 @@ const UserInput = () => {
 		additionalInstructions: "",
 	});
 	const [isUploading, setIsUploading] = useState(false);
-	const [isGenerating, setIsGenerating] = useState(false);
-
 	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
 	const { isLoading } = loadingState;
-	console.log("LOADING STATE", loadingState);
 
 	const router = useRouter();
 	const pathname = usePathname();
@@ -43,19 +41,26 @@ const UserInput = () => {
 			const { scriptURL } = response.data;
 
 			// Redirect to a new URL with s3Url as a query parameter
+			// SET_FINISH_LOADING to be set after navigating to the next page
 			router.push(`/scripts/${scriptURL}`);
 		} catch (error) {
 			console.error("Error submitting form:", error);
 		}
-
-		loadingDispatch({ type: "SET_FINISH_LOADING" });
 	};
 
 	const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-		setIsUploading(true);
 		const file = event.target.files?.[0];
+		const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
+
 		if (!file) return;
 
+		if (file.size > maxSizeInBytes) {
+			alert("File size exceeds 10MB");
+			event.target.value = ""; // Clear the input
+			return;
+		}
+
+		setIsUploading(true);
 		try {
 			// Get the pre-signed URL from the backend so the frontend can securely upload to Amazon S3 without exposing secret access key and id
 			const response = await axios.post("/api/upload", {
@@ -125,7 +130,7 @@ const UserInput = () => {
 
 	return (
 		<div
-			className={`w-full md:w-1/2 p-6 md:bg-[#F8F8F8] md:fixed h-[calc(100vh-70px)] ${
+			className={`overflow-y-scroll w-full md:w-1/2 p-6 md:bg-[#F8F8F8] md:fixed h-[calc(100vh-70px)] ${
 				isHome ? "mt-8 md:mt-[70px]" : ""
 			}`}>
 			<form onSubmit={handleSubmitForm}>
@@ -180,8 +185,8 @@ const UserInput = () => {
 								) : (
 									<>
 										Uploading File
-										<span>
-											<FiUpload />
+										<span className="spinner">
+											<AiOutlineLoading3Quarters />
 										</span>
 									</>
 								)}
@@ -231,7 +236,8 @@ const UserInput = () => {
 						className="block font-medium ">
 						Additional instructions or specifications
 					</label>
-					<textarea
+					<input
+						type="text"
 						id="additionalInstructions"
 						name="additionalInstructions"
 						placeholder="Enter your preferences on tone or structure"
@@ -242,17 +248,19 @@ const UserInput = () => {
 				</div>
 
 				{/* Submit Button */}
-				<div className="w-full flex justify-center mt-10 md:mt-24">
+				<div className="w-full flex justify-center mt-10 md:mt-16">
 					<button
 						type="submit"
 						className="flex items-center justify-center text-xl bg-primary text-white rounded-lg px-8 py-4 gap-2 cursor-pointer w-full md:w-auto">
-						{isGenerating ? "Generating Script..." : "Generate Script"}
+						{isLoading ? "Generating Script..." : "Generate Script"}
 						<span>
 							<BsStars />
 						</span>
 					</button>
 				</div>
 			</form>
+
+			{/* For mobile view */}
 			{isLoading && (
 				<div className="block md:hidden">
 					<div className="w-full h-screen bg-white fixed top-0 right-0 z-50 backdrop-filter backdrop-blur-lg flex items-center justify-center flex-col ">

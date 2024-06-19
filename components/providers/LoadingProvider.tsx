@@ -1,7 +1,11 @@
+import { FromPDFProps } from "@/app/page";
 import React, { createContext, useReducer, ReactNode, Dispatch } from "react";
 
 interface State {
 	isLoading: boolean;
+	displayScript: FromPDFProps | null;
+	toastVisible: boolean;
+	toastMessage: string;
 }
 
 interface Action {
@@ -11,6 +15,9 @@ interface Action {
 
 const initialState: State = {
 	isLoading: false,
+	displayScript: null,
+	toastVisible: false,
+	toastMessage: "Pitch script generated",
 };
 
 interface ContextType {
@@ -24,11 +31,19 @@ export const LoadingProviderContext = createContext<ContextType>({
 });
 
 const reducer = (state: State, action: Action) => {
+	console.log("action", action);
 	switch (action.type) {
 		case "SET_START_LOADING":
-			return { ...state, isLoading: true };
+			return { ...state, isLoading: true, toastVisible: false };
 		case "SET_FINISH_LOADING":
-			return { ...state, isLoading: false };
+			return { ...state, isLoading: false, toastVisible: false };
+		case "SET_DISPLAY_SCRIPT":
+			return { ...state, displayScript: action.payload, toastVisible: false };
+		case "SET_SHOW_TOAST":
+			console.log("STATE", state);
+			return { ...state, toastVisible: true, toastMessage: action.payload };
+		case "SET_HIDE_TOAST":
+			return { ...state, toastVisible: false };
 		default:
 			return state;
 	}

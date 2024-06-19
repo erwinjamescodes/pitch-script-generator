@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		const params = {
-			Bucket: "pitch-script-generator",
+			Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME || "",
 			Key: key,
 		};
 
