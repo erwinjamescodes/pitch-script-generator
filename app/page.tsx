@@ -1,10 +1,10 @@
 "use client";
 import ScriptCards from "@/components/shared/ScriptCards";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Field, fields } from "@/components/constants/fields";
 import { ScriptProviderContext } from "@/components/providers/ScriptProvider";
 import { Loader } from "@/components/shared/Loader";
-export interface FromPDFProps {
+export interface ScriptKeysProps {
 	Introduction: string;
 	Hook: string;
 	ProblemStatement: string;
@@ -19,8 +19,12 @@ export interface FromPDFProps {
 }
 
 export default function Home() {
-	const { scriptState } = useContext(ScriptProviderContext);
+	const { scriptState, scriptDispatch } = useContext(ScriptProviderContext);
 	const { isLoading } = scriptState;
+
+	useEffect(() => {
+		scriptDispatch({ type: "SET_DISPLAY_SCRIPT", payload: null });
+	}, []);
 	return (
 		<main className="flex text-primary">
 			<div className="w-1/2 p-6 ml-[50%] mt-[70px] relative h-[calc(100vh-70px)] ">

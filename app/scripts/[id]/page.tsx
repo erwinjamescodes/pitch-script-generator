@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import axios from "axios";
 import { Loader } from "@/components/shared/Loader";
 import { ScriptProviderContext } from "@/components/providers/ScriptProvider";
-import { FromPDFProps } from "@/app/page";
+import { ScriptKeysProps } from "@/app/page";
 import { parseCsvString } from "@/components/utils/parseCsvString";
 
 const Placeholders = () => {
@@ -66,7 +66,7 @@ const Placeholders = () => {
 						key={item.key}
 						item={item}
 						withContent={true}
-						content={displayScript?.[item.key as keyof FromPDFProps]}
+						content={displayScript?.[item.key as keyof ScriptKeysProps]}
 					/>
 				))}
 			</div>

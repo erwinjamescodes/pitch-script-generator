@@ -1,11 +1,11 @@
 "use client";
-import React, { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { ScriptProviderContext } from "../providers/ScriptProvider";
+import axios from "axios";
 
 type FormData = {
 	userPitch: string;
@@ -37,11 +37,8 @@ const UserInput = () => {
 					"Content-Type": "application/json",
 				},
 			});
-
 			const { scriptURL } = response.data;
 
-			// Redirect to a new URL with s3Url as a query parameter
-			// SET_FINISH_LOADING to be set after navigating to the next page
 			router.push(`/scripts/${scriptURL}`);
 		} catch (error) {
 			console.error("Error submitting form:", error);

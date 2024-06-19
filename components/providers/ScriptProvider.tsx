@@ -1,9 +1,9 @@
-import { FromPDFProps } from "@/app/page";
-import React, { createContext, useReducer, ReactNode, Dispatch } from "react";
+import { ScriptKeysProps } from "@/app/page";
+import { createContext, useReducer, ReactNode, Dispatch } from "react";
 
 interface State {
 	isLoading: boolean;
-	displayScript: FromPDFProps | null;
+	displayScript: ScriptKeysProps | null;
 	toastVisible: boolean;
 	toastMessage: string;
 }
@@ -33,11 +33,11 @@ export const ScriptProviderContext = createContext<ContextType>({
 const reducer = (state: State, action: Action) => {
 	switch (action.type) {
 		case "SET_START_LOADING":
-			return { ...state, isLoading: true, toastVisible: false };
+			return { ...state, isLoading: true };
 		case "SET_FINISH_LOADING":
-			return { ...state, isLoading: false, toastVisible: false };
+			return { ...state, isLoading: false };
 		case "SET_DISPLAY_SCRIPT":
-			return { ...state, displayScript: action.payload, toastVisible: false };
+			return { ...state, displayScript: action.payload };
 		case "SET_SHOW_TOAST":
 			return { ...state, toastVisible: true, toastMessage: action.payload };
 		case "SET_HIDE_TOAST":

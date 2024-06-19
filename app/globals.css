@@ -56,3 +56,9 @@
 		transform: translateY(0);
 	}
 }
+
+/* LOADING BAR */
+.loading-bar {
+	background: linear-gradient(to right, #ea749d, #8e8ef6);
+	transition: width 0.5s ease-in-out;
+}

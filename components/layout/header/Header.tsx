@@ -1,4 +1,3 @@
-import React from "react";
 import DesktopHeader from "./Desktop";
 import MobileHeader from "./Mobile";
 

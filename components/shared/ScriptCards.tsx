@@ -1,4 +1,3 @@
-import React from "react";
 import { Field } from "../constants/fields";
 import { LuRefreshCcw } from "react-icons/lu";
 import CopyFieldToClipboard from "../buttons/CopyFieldToClipboard";

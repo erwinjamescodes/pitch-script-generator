@@ -9,6 +9,13 @@ const CopyToClipboard = () => {
 	const { displayScript } = scriptState;
 
 	const handleCopyToClipboardClick = () => {
+		if (!displayScript) {
+			scriptDispatch({
+				type: "SET_SHOW_TOAST",
+				payload: "Please generate a script first",
+			});
+			return;
+		}
 		if (displayScript) {
 			const copyText = convertJsonToMarkdown(displayScript);
 			navigator.clipboard

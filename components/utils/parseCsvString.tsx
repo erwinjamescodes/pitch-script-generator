@@ -1,8 +1,8 @@
-import { FromPDFProps } from "@/app/page";
+import { ScriptKeysProps } from "@/app/page";
 import Papa from "papaparse";
 
-export const parseCsvString = (csvString: string): FromPDFProps[] | null => {
-	const parsedData = Papa.parse<FromPDFProps>(csvString, {
+export const parseCsvString = (csvString: string): ScriptKeysProps[] | null => {
+	const parsedData = Papa.parse<ScriptKeysProps>(csvString, {
 		header: true,
 		skipEmptyLines: true,
 	});

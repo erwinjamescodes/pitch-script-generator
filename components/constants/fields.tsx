@@ -1,5 +1,3 @@
-// import { FromPDFKeys } from "@/app/scripts/page";
-
 export interface Field {
 	title: string;
 	key: string;

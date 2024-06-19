@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { ScriptProviderContext } from "../providers/ScriptProvider";
 
@@ -27,7 +27,7 @@ const Toast = () => {
 			}`}>
 			<div className="bg-white text-primary px-8 py-4 rounded-lg flex items-center space-x-4 shadow-2xl border border-solid border-gray-200">
 				<span>
-					<FaCheckCircle className="text-xl" />
+					<FaCheckCircle className="text-xl text-[#F4C8DB] " />
 				</span>
 				<span>{toastMessage}</span>
 				<button
