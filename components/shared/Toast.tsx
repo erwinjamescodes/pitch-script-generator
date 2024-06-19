@@ -1,17 +1,13 @@
 import React, { useEffect, useContext } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import { LoadingProviderContext } from "../providers/LoadingProvider";
+import { ScriptProviderContext } from "../providers/ScriptProvider";
 
-interface ToastProps {
-	message: string;
-}
-
-const Toast: React.FC<ToastProps> = () => {
-	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
-	const { toastVisible, toastMessage } = loadingState;
+const Toast = () => {
+	const { scriptState, scriptDispatch } = useContext(ScriptProviderContext);
+	const { toastVisible, toastMessage } = scriptState;
 
 	const closeToast = () => {
-		loadingDispatch({
+		scriptDispatch({
 			type: "SET_HIDE_TOAST",
 		});
 	};
@@ -27,7 +23,7 @@ const Toast: React.FC<ToastProps> = () => {
 	return (
 		<div
 			className={`fixed bottom-2 inset-x-0 flex justify-center mb-4 fade-out ${
-				toastVisible ? "" : "hidden"
+				toastVisible ? "animate-toast-pop-up" : "hidden"
 			}`}>
 			<div className="bg-white text-primary px-8 py-4 rounded-lg flex items-center space-x-4 shadow-2xl border border-solid border-gray-200">
 				<span>

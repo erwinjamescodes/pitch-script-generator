@@ -1,17 +1,17 @@
 "use client";
 import { useContext } from "react";
 import { GoLink } from "react-icons/go";
-import { LoadingProviderContext } from "../providers/LoadingProvider";
+import { ScriptProviderContext } from "../providers/ScriptProvider";
 
 const ShareButton = () => {
-	const { loadingDispatch } = useContext(LoadingProviderContext);
+	const { scriptDispatch } = useContext(ScriptProviderContext);
 
 	const handleShareClick = () => {
 		const url = window.location.href;
 		navigator.clipboard
 			.writeText(url)
 			.then(() => {
-				loadingDispatch({
+				scriptDispatch({
 					type: "SET_SHOW_TOAST",
 					payload: "Link copied to clipboard",
 				});

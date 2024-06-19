@@ -5,7 +5,7 @@ import { BsStars } from "react-icons/bs";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import { LoadingProviderContext } from "../providers/LoadingProvider";
+import { ScriptProviderContext } from "../providers/ScriptProvider";
 
 type FormData = {
 	userPitch: string;
@@ -22,15 +22,15 @@ const UserInput = () => {
 		additionalInstructions: "",
 	});
 	const [isUploading, setIsUploading] = useState(false);
-	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
-	const { isLoading } = loadingState;
+	const { scriptState, scriptDispatch } = useContext(ScriptProviderContext);
+	const { isLoading } = scriptState;
 
 	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === "/";
 
 	const handleSubmit = async (formData: FormData) => {
-		loadingDispatch({ type: "SET_START_LOADING" });
+		scriptDispatch({ type: "SET_START_LOADING" });
 		try {
 			const response = await axios.post("/api/generate-pitch", formData, {
 				headers: {
@@ -55,8 +55,11 @@ const UserInput = () => {
 		if (!file) return;
 
 		if (file.size > maxSizeInBytes) {
-			alert("File size exceeds 10MB");
-			event.target.value = ""; // Clear the input
+			scriptDispatch({
+				type: "SET_SHOW_TOAST",
+				payload: "File size exceeds 10MB",
+			});
+			event.target.value = "";
 			return;
 		}
 
@@ -82,7 +85,10 @@ const UserInput = () => {
 				pitchDeck: file.name,
 			});
 
-			console.log("File uploaded successfully");
+			scriptDispatch({
+				type: "SET_SHOW_TOAST",
+				payload: "File uploaded successfully",
+			});
 		} catch (error) {
 			console.error("Error uploading file:", error);
 		}

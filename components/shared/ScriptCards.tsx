@@ -1,8 +1,7 @@
 import React from "react";
 import { Field } from "../constants/fields";
-import { FiClipboard } from "react-icons/fi";
 import { LuRefreshCcw } from "react-icons/lu";
-import { convertFieldsToMarkdown } from "../utils/convertJsonToMarkdown";
+import CopyFieldToClipboard from "../buttons/CopyFieldToClipboard";
 
 interface ScriptCardsProps {
 	item: Field;
@@ -15,19 +14,6 @@ const ScriptCards: React.FC<ScriptCardsProps> = ({
 	withContent,
 	content,
 }) => {
-	const handleCopyFieldToClipboard = () => {
-		if (item && content) {
-			const copyText = convertFieldsToMarkdown(item.title, content);
-			navigator.clipboard
-				.writeText(copyText)
-				.then(() => {
-					alert(`${item.title} copied to clipboard`);
-				})
-				.catch((err) => {
-					console.error("Failed to copy: ", err);
-				});
-		}
-	};
 	return (
 		<div
 			className="py-2 px-4 border border-neutral border-solid rounded-lg mb-4 "
@@ -36,9 +22,10 @@ const ScriptCards: React.FC<ScriptCardsProps> = ({
 				<p className="font-medium">{item.title}</p>
 				{withContent && (
 					<div className="flex gap-2">
-						<button onClick={() => handleCopyFieldToClipboard()}>
-							<FiClipboard className="txt-xs" />
-						</button>
+						<CopyFieldToClipboard
+							title={item.title}
+							content={content}
+						/>
 						<button>
 							<LuRefreshCcw className="txt-xs" />
 						</button>

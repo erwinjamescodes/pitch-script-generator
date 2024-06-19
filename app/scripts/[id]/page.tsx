@@ -5,21 +5,22 @@ import ScriptCards from "@/components/shared/ScriptCards";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import { Loader } from "@/components/shared/Loader";
-import { LoadingProviderContext } from "@/components/providers/LoadingProvider";
+import { ScriptProviderContext } from "@/components/providers/ScriptProvider";
 import { FromPDFProps } from "@/app/page";
 import { parseCsvString } from "@/components/utils/parseCsvString";
 
 const Placeholders = () => {
-	const { loadingState, loadingDispatch } = useContext(LoadingProviderContext);
-	const { isLoading, displayScript } = loadingState;
+	const { scriptState, scriptDispatch } = useContext(ScriptProviderContext);
+	const { isLoading, displayScript } = scriptState;
 	const pathname = usePathname();
 	let currentKey = pathname.split("scripts/")[1].concat(".csv");
 
 	useEffect(() => {
 		if (currentKey && !displayScript) {
 			let retrievedData;
+
 			const fetchScript = async () => {
-				loadingDispatch({
+				scriptDispatch({
 					type: "SET_START_LOADING",
 				});
 				try {
@@ -32,7 +33,7 @@ const Placeholders = () => {
 					retrievedData = response.data;
 					const parsedData = parseCsvString(retrievedData);
 					if (parsedData) {
-						loadingDispatch({
+						scriptDispatch({
 							type: "SET_DISPLAY_SCRIPT",
 							payload: parsedData[0],
 						});
@@ -42,10 +43,10 @@ const Placeholders = () => {
 				} catch (error) {
 					console.error("Error fetching file:", error);
 				}
-				loadingDispatch({
+				scriptDispatch({
 					type: "SET_FINISH_LOADING",
 				});
-				loadingDispatch({
+				scriptDispatch({
 					type: "SET_SHOW_TOAST",
 					payload: "Pitch script updated",
 				});

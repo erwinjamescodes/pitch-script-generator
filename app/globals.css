@@ -39,15 +39,20 @@
 }
 
 /* TOAST */
-.fade-out {
-	animation: fadeOut 3s forwards;
+.animate-toast-pop-up {
+	animation: toast-pop-up 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
 }
 
-@keyframes fadeOut {
-	from {
+@keyframes toast-pop-up {
+	0% {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+	70% {
+		transform: translateY(-10%);
 		opacity: 1;
 	}
-	to {
-		opacity: 0;
+	100% {
+		transform: translateY(0);
 	}
 }

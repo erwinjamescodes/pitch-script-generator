@@ -62,34 +62,7 @@ export async function POST(request: NextRequest) {
 		});
 
 		const pitchScript = await response.json();
-
-		const ensureJsonFormatForPDF = (str: string) => {
-			let cleanedStr = str.trim();
-			if (cleanedStr.startsWith("{")) {
-				cleanedStr = cleanedStr.replace(/^\{+/, "{");
-			}
-			if (cleanedStr.endsWith("}")) {
-				cleanedStr = cleanedStr.replace(/\}+$/, "}");
-			}
-
-			return cleanedStr;
-		};
-
 		const pitchText = ensureJsonFormatForPDF(pitchScript.choices[0].text);
-
-		const removeTrailingWhitespace = (str: string): string => {
-			return str.replace(/\s+$/, "");
-		};
-		const convertJsonToCsv = (jsonData: any): string => {
-			const fieldKeys: string[] = fields.map((field) => field.key);
-			try {
-				const csvData = parse([jsonData], { fields: fieldKeys });
-				return csvData;
-			} catch (error) {
-				console.error("Error converting JSON to CSV:", error);
-				return "";
-			}
-		};
 
 		// Generate CSV data
 		// Remove trailing whitespace from the pitch script text and parse it as JSON
@@ -97,8 +70,6 @@ export async function POST(request: NextRequest) {
 		const formattedPitchScriptText = removeTrailingWhitespace(pitchScriptText);
 		const pitchScriptJson = JSON.parse(formattedPitchScriptText);
 		const csvData = convertJsonToCsv(pitchScriptJson);
-
-		console.log("PITCH SCRIPT JSON", pitchScriptJson);
 
 		// Create PDF document
 		const pdfDoc = await PDFDocument.create();
@@ -151,3 +122,30 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
 }
+
+const ensureJsonFormatForPDF = (str: string) => {
+	let cleanedStr = str.trim();
+	if (cleanedStr.startsWith("{")) {
+		cleanedStr = cleanedStr.replace(/^\{+/, "{");
+	}
+	if (cleanedStr.endsWith("}")) {
+		cleanedStr = cleanedStr.replace(/\}+$/, "}");
+	}
+
+	return cleanedStr;
+};
+
+const removeTrailingWhitespace = (str: string): string => {
+	return str.replace(/\s+$/, "");
+};
+
+const convertJsonToCsv = (jsonData: any): string => {
+	const fieldKeys: string[] = fields.map((field) => field.key);
+	try {
+		const csvData = parse([jsonData], { fields: fieldKeys });
+		return csvData;
+	} catch (error) {
+		console.error("Error converting JSON to CSV:", error);
+		return "";
+	}
+};

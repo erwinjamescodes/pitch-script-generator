@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		const contentType = "text/csv";
+
 		return new NextResponse(Body as BodyInit, {
 			status: 200,
 			headers: {

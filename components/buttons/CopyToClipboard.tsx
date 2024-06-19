@@ -1,12 +1,12 @@
 "use client";
 import { useContext } from "react";
 import { FiClipboard } from "react-icons/fi";
-import { LoadingProviderContext } from "../providers/LoadingProvider";
+import { ScriptProviderContext } from "../providers/ScriptProvider";
 import { convertJsonToMarkdown } from "../utils/convertJsonToMarkdown";
 
 const CopyToClipboard = () => {
-	const { loadingDispatch, loadingState } = useContext(LoadingProviderContext);
-	const { displayScript } = loadingState;
+	const { scriptDispatch, scriptState } = useContext(ScriptProviderContext);
+	const { displayScript } = scriptState;
 
 	const handleCopyToClipboardClick = () => {
 		if (displayScript) {
@@ -14,7 +14,7 @@ const CopyToClipboard = () => {
 			navigator.clipboard
 				.writeText(copyText)
 				.then(() => {
-					loadingDispatch({
+					scriptDispatch({
 						type: "SET_SHOW_TOAST",
 						payload: "Script copied to clipboard",
 					});
