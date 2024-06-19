@@ -13,7 +13,7 @@ const Placeholders = () => {
 	const { scriptState, scriptDispatch } = useContext(ScriptProviderContext);
 	const { isLoading, displayScript } = scriptState;
 	const pathname = usePathname();
-	let currentKey = pathname.split("scripts/")[1].concat(".csv");
+	const currentKey = pathname.split("scripts/")[1].concat(".csv");
 
 	useEffect(() => {
 		if (currentKey && !displayScript) {

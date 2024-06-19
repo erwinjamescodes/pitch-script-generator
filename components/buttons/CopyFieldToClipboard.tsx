@@ -11,6 +11,7 @@ interface Props {
 
 const CopyFieldToClipboard: React.FC<Props> = ({ title, content }) => {
 	const { scriptDispatch } = useContext(ScriptProviderContext);
+
 	const handleCopyFieldToClipboard = () => {
 		if (title && content) {
 			const copyText = convertFieldsToMarkdown(title, content);

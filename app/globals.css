@@ -4,19 +4,19 @@
 
 /* MOBILE BACKGROUND */
 .gradient-bg {
-	height: 200px; /* Adjust height as needed */
+	height: 200px;
 	background: linear-gradient(to bottom, #fdf3fd 100%, #f5f 100%, #ffffff 90%);
 }
 
 @media (min-width: 768px) {
 	.gradient-bg {
-		background: none; /* Remove the gradient background on medium screens and above */
+		background: none;
 	}
 }
 
 /* UPLOAD SPINNER */
 .spinner {
-	-webkit-animation: spin 2s linear infinite; /* Safari */
+	-webkit-animation: spin 2s linear infinite;
 	animation: spin 2s linear infinite;
 }
 
